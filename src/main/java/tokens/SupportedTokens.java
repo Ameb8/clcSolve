@@ -34,6 +34,16 @@ public class SupportedTokens {
 		tokens.put("÷", division);
 		tokens.put("/", division);
 		
+		Token leftGrouping = new Parentheses("(", 0, true);
+		tokens.put("(", leftGrouping);
+		tokens.put("{", leftGrouping);
+		tokens.put("[", leftGrouping);
+		
+		Token rightGrouping = new Parentheses(")", 0, false);
+		tokens.put(")", rightGrouping);
+		tokens.put("}", rightGrouping);
+		tokens.put("]", rightGrouping);
+		
 		System.out.println("TEST______:\n" + multiplication.toString() + "\n" + addition.toString());
 		
 		

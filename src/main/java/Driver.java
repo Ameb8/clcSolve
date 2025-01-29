@@ -6,9 +6,12 @@ public class Driver {
 		System.out.println("Hello, World!");
 		Parser parser = new Parser();
 		
-		parser.evaluateExpression("2 + 23 * 13");
-		parser.evaluateExpression("2 * (12 + 22)");
-
+		//parser.evaluateExpression("2 + 23 * 13");
+		//parser.evaluateExpression("2 * (12 + 22)");
+		//parser.evaluateExpression("2 + 12 * 22");
+		parser.evaluateExpression("6/l3l   +22x2");
+		
+		
 	}
 
 }

@@ -39,7 +39,7 @@ public class TokenBuilder {
 		}
 		
 		if(!tokenValidator.contains(tokenVal))
-			throw new IllegalArgumentException();
+			return new InvalidInput(tokenVal, tokenNum);
 		
 		return null;	
 	}

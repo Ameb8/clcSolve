@@ -20,6 +20,8 @@ public class Parser {
 		System.out.println(infixExpression.toString());
 		List<Token> postfixExpression = convertPostfix(infixExpression);
 		System.out.println(postfixExpression.toString());
+		double result = evaluate(postfixExpression);
+		System.out.println(result);
 	}
 	
 	public List<Token> parseExpression(String expression) {
@@ -72,16 +74,34 @@ public class Parser {
 		Deque<Token> operatorStack = new ArrayDeque<>();
 		List<Token> postfixExpression = new LinkedList<>();
 		
+		//DEBUG
+		System.out.println("\n\n\nCONVERT TO POSTFIX: [" + infixExpression.toString() + "]");
+		
 		for(Token token: infixExpression) {
+			System.out.println("Token: {" + token + "}");
+			
 			if(!(token instanceof InvalidInput)) {
 				token.toRPN(operatorStack, postfixExpression);
 			}
+			
+			System.out.println("op stack:\n" + operatorStack.toString());
+			System.out.println("postfix list:\n" + postfixExpression.toString() + "\n");
 		}
+		
+		while(!operatorStack.isEmpty())
+			postfixExpression.addLast(operatorStack.pop());
 		
 		return postfixExpression;
 		
 	}
 	
-	public Double evaluate()
+	public Double evaluate(List<Token> postfixExpression) {
+		Deque<Double> evaluator = new ArrayDeque<>();
+		
+		for(Token token : postfixExpression)
+			token.evaluate(evaluator);
+		
+		return evaluator.pop();
+	}
 	
 }

@@ -43,6 +43,7 @@ public class Operator extends Token {
                 break;
             }
         }
+        
         operatorStack.push(this);
     }
 

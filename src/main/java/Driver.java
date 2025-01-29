@@ -9,8 +9,8 @@ public class Driver {
 		//parser.evaluateExpression("2 + 23 * 13");
 		//parser.evaluateExpression("2 * (12 + 22)");
 		//parser.evaluateExpression("2 + 12 * 22");
-		parser.evaluateExpression("6/l3l   +22x2");
-		
+		//parser.evaluateExpression("6/l3l   +22x2");
+		parser.evaluateExpression("5 + sqrt(25");
 		
 	}
 

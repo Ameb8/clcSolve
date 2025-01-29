@@ -44,7 +44,13 @@ public class SupportedTokens {
 		tokens.put("}", rightGrouping);
 		tokens.put("]", rightGrouping);
 		
-		System.out.println("TEST______:\n" + multiplication.toString() + "\n" + addition.toString());
+		Token sqrRoot = new UnaryOperator("sqrt", 0, (byte) 2, false, (a) -> Math.sqrt(a));
+		tokens.put("sqrt", sqrRoot);
+		tokens.put("√ ", sqrRoot);
+		
+		
+		
+		System.out.println("TEST______:\n" + multiplication.toString());
 		
 		
 		

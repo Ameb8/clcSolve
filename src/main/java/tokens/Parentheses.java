@@ -6,8 +6,16 @@ import java.util.List;
 public class Parentheses extends Token {
 	boolean isOpen;
 	
-    public Parentheses(boolean isOpen) {
-        this.isOpen = isOpen;
+    public Parentheses(String symbol, long tokenId, boolean isOpen) {
+        super(symbol, tokenId);    	
+    	this.isOpen = isOpen;
+    }
+    
+    public boolean preceedsUnary() {
+    	if(isOpen)
+    		return true;
+    	
+    	return false;
     }
 	
 	@Override

@@ -6,7 +6,14 @@ import java.util.List;
 public class Operand extends Token {
 	private double value;
 
-	public Operand()
+	public Operand(long tokenId, double value) {
+		super(String.valueOf(value), tokenId);
+		this.value = value;
+	}
+	
+	public boolean preceedsUnary() {
+		return false;
+	}
 	
 	@Override
 	public void evaluate(Deque<Double> result) {

@@ -3,7 +3,7 @@ package tokens;
 import java.util.Deque;
 import java.util.List;
 
-abstract class Token {
+public abstract class Token {
 	private String symbol;
 	private long tokenId;
 	
@@ -19,21 +19,20 @@ abstract class Token {
 	}
 	
 	/**
-	 * getter method for token in text form
-	 * 
-	 * @return symbol
-	 */
-	public String getSymbol() {
-		return symbol;
-	}
-	
-	/**
 	 * provides unique identifier for Token object
 	 * 
 	 * @return tokens unique Id
 	 */
 	public long getTokenId() {
 		return tokenId;
+	}
+	
+	public void setTokenId(long id) {
+		this.tokenId = id;
+	}
+	
+	public String toString() {
+		return symbol  + " ";
 	}
 	
 	
@@ -44,7 +43,14 @@ abstract class Token {
 	 * @param tokenId new unique identifier for token
 	 * @return deep copy of passed Token
 	 */
-	public abstract Token copyToken(Token other, long tokenId);
+//	public abstract Token copyToken(Token other, long tokenId);
+
+	/**
+	 * determines if operator following this token must be unary
+	 * 
+	 * @return true if following operator must be unary
+	 */
+	public abstract boolean preceedsUnary();
 	
 	/**
 	 * handles evaluation of this token
@@ -57,7 +63,8 @@ abstract class Token {
 	 * handles conversion to post fix expression
 	 * 
 	 * @param operatorStack Dequeue of operators
-	 * @param infixExpression Resulting expression in postfix order
+	 * @param postfixExpression Resulting expression in post fix order
 	 */
-	public abstract void toRPN(Deque<Token> operatorStack, List<Token> infixExpression);
+	public abstract void toRPN(Deque<Token> operatorStack, List<Token> postfixExpression);
+	
 }

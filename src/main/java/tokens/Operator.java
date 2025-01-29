@@ -15,10 +15,14 @@ public class Operator extends Token {
 		this.isLeftAssociative = isLeftAssociative;
 		this.operation = operation;
 	}
-
-    public Token copyToken(Token other, long tokenId) {
-    	return new Operator(other.getSymbol(), other.getTokenId(), other.getPrecedence, other.isLeftAssoicait)
+    
+    public boolean preceedsUnary() {
+    	return true;
     }
+
+    /*public Token copyToken(Token other, long tokenId) {
+    	return new Operator(other.getSymbol(), other.getTokenId(), other.getPrecedence, other.isLeftAssoicait)
+    }*/
     
     public byte getPrecedence() {
     	return precedence;

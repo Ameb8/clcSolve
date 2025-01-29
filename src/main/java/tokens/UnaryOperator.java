@@ -11,11 +11,15 @@ public class UnaryOperator extends Token {
     private boolean isLeftAssociative;
     private Function<Double, Double> operation;
 
-    public UnaryOperator(String symbol, byte precedence, boolean isLeftAssociative, Function<Double, Double> operation) {
-        this.symbol = symbol;
+    public UnaryOperator(String symbol, long tokenId, byte precedence, boolean isLeftAssociative, Function<Double, Double> operation) {
+        super(symbol, tokenId);
         this.precedence = precedence;
         this.isLeftAssociative = isLeftAssociative;
         this.operation = operation;
+    }
+    
+    public boolean preceedsUnary() {
+    	return true;
     }
     
     public byte getPrecedence() {
@@ -41,4 +45,8 @@ public class UnaryOperator extends Token {
         result.push(operation.apply(result.pop()));
     }
 
+    @Override
+    public String toString() {
+    	return symbol;
+    }
 }

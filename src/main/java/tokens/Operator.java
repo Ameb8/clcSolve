@@ -16,6 +16,7 @@ public class Operator extends Token {
 		this.operation = operation;
 	}
     
+    @Override
     public boolean preceedsUnary() {
     	return true;
     }

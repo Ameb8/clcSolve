@@ -4,7 +4,7 @@ import java.util.Deque;
 import java.util.List;
 
 public abstract class Token {
-	private String symbol;
+	protected String symbol;
 	private long tokenId;
 	
 	/**

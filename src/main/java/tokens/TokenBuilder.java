@@ -12,7 +12,7 @@ public class TokenBuilder {
 		tokenRegistry = SupportedTokens.getSupportedTokens();
 		tokenValidator = getTokenValidator();
 		tokenNum = 0;
-		System.out.println("TokenBuilder Created");
+		//System.out.println("TokenBuilder Created");
 	}
 	
 	/**
@@ -25,7 +25,7 @@ public class TokenBuilder {
 	 */
 	public Token getToken(String tokenVal) throws IllegalArgumentException {
 		//DEBUG
-		System.out.println("TokenVal: " + tokenVal);
+		//System.out.println("TokenVal: " + tokenVal);
 		
 		try {
 			double operandValue = Double.parseDouble(tokenVal);
@@ -51,7 +51,7 @@ public class TokenBuilder {
 		
 		for(String tokenKey : tokenRegistry.keySet()) {
 			//DEBUG
-			System.out.println("\n\n\ntokenRegistry: " + tokenRegistry.toString());
+			//System.out.println("\n\n\ntokenRegistry: " + tokenRegistry.toString());
 			
 			keyBuilder.setLength(0);
 			

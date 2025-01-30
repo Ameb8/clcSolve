@@ -3,37 +3,42 @@ package tokens;
 import java.util.Deque;
 import java.util.List;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
-public class UnaryOperator extends Token implements Operator {
+public class BinaryOperator extends Token implements Operator {
     private byte precedence;
     private boolean isLeftAssociative;
-    private Function<Double, Double> operation;
+    private BiFunction<Double, Double, Double> operation;
 
-    public UnaryOperator(String symbol, long tokenId, byte precedence, boolean isLeftAssociative, Function<Double, Double> operation) {
-        super(symbol, tokenId);
-        this.precedence = precedence;
-        this.isLeftAssociative = isLeftAssociative;
-        this.operation = operation;
-    }
+    public BinaryOperator(String symbol, long tokenId, byte precedence, boolean isLeftAssociative, BiFunction<Double, Double, Double> operation) {
+    	super(symbol, tokenId);
+		this.precedence = precedence;
+		this.isLeftAssociative = isLeftAssociative;
+		this.operation = operation;
+	}
     
+    @Override
     public boolean preceedsUnary() {
     	return true;
     }
+
+    /*public Token copyToken(Token other, long tokenId) {
+    	return new Operator(other.getSymbol(), other.getTokenId(), other.getPrecedence, other.isLeftAssoicait)
+    }*/
     
+    @Override
     public byte getPrecedence() {
     	return precedence;
     }
     
+    @Override
     public boolean isLeftAssociative() {
-    	return isLeftAssociative();
+    	return isLeftAssociative;
     }
 
     @Override
     public void toRPN(Deque<Token> operatorStack, List<Token> infixExpression) {
         while(!operatorStack.isEmpty() && operatorStack.peek() instanceof Operator) {
             Operator top = (Operator) operatorStack.peek();
-            
             if((isLeftAssociative && precedence <= top.getPrecedence()) || (!isLeftAssociative && precedence < top.getPrecedence())) {
             	infixExpression.add(operatorStack.pop());
             } else {
@@ -46,12 +51,9 @@ public class UnaryOperator extends Token implements Operator {
 
     @Override
     public void evaluate(Deque<Double> result) {
-
-        result.push(operation.apply(result.pop()));
-    }
-
-    @Override
-    public String toString() {
-    	return symbol;
+        double b = result.pop();
+        double a = result.pop();
+        result.push(operation.apply(a, b));
     }
 }
+

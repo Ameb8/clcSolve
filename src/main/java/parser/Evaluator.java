@@ -7,21 +7,22 @@ import java.util.Deque;
 
 import tokens.*;
 
-public class Parser {
+public class Evaluator {
 	private TokenBuilder builder;
+	private List<Token> displayExpression;
 	
-	public Parser() {
+	public Evaluator() {
 		builder = new TokenBuilder();
 		System.out.println("ParserCreated");
 	}
 	
 	public void evaluateExpression(String expression) {
 		List<Token> infixExpression = parseExpression(expression);
-		System.out.println(infixExpression.toString());
+		System.out.println("Tokenized Infix\t" + infixExpression.toString());
 		List<Token> postfixExpression = convertPostfix(infixExpression);
-		System.out.println(postfixExpression.toString());
+		System.out.println("Tokenized Postfix:\t" +  postfixExpression.toString());
 		double result = evaluate(postfixExpression);
-		System.out.println(result);
+		System.out.println("Result:\t" + result);
 	}
 	
 	public List<Token> parseExpression(String expression) {
@@ -51,9 +52,12 @@ public class Parser {
 			
 			if(thisToken == null)
 				continue;
+			//DEBUG
+			//else
+				//System.out.println(thisToken.toString());
 			
 			//handle binary vs. unary '-'
-			if(thisToken.toString().equals("-") && (prevToken == null || prevToken.preceedsUnary()))
+			if(thisToken.toString().trim().equals("-") && (prevToken == null || prevToken.preceedsUnary()))
 				thisToken = builder.getToken("u-");
 			
 			tokenList.addLast(thisToken);
@@ -75,17 +79,17 @@ public class Parser {
 		List<Token> postfixExpression = new LinkedList<>();
 		
 		//DEBUG
-		System.out.println("\n\n\nCONVERT TO POSTFIX: [" + infixExpression.toString() + "]");
+		//System.out.println("\n\n\nCONVERT TO POSTFIX: [" + infixExpression.toString() + "]");
 		
 		for(Token token: infixExpression) {
-			System.out.println("Token: {" + token + "}");
+			//System.out.println("Token: {" + token + "}");
 			
 			if(!(token instanceof InvalidInput)) {
 				token.toRPN(operatorStack, postfixExpression);
 			}
 			
-			System.out.println("op stack:\n" + operatorStack.toString());
-			System.out.println("postfix list:\n" + postfixExpression.toString() + "\n");
+			//System.out.println("op stack:\n" + operatorStack.toString());
+			//System.out.println("postfix list:\n" + postfixExpression.toString() + "\n");
 		}
 		
 		while(!operatorStack.isEmpty())
@@ -98,9 +102,11 @@ public class Parser {
 	public Double evaluate(List<Token> postfixExpression) {
 		Deque<Double> evaluator = new ArrayDeque<>();
 		
-		for(Token token : postfixExpression)
+		for(Token token : postfixExpression) {
+			System.out.println(evaluator.toString());
+			
 			token.evaluate(evaluator);
-		
+		}	
 		return evaluator.pop();
 	}
 	

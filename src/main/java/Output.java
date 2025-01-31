@@ -1,12 +1,15 @@
 import java.util.LinkedList;
 import java.util.List;
+
+import errors.Error;
+
 import java.util.HashMap;
 
 import tokens.InvalidInput;
 import tokens.Token;
 
 public class Output {
-	private HashMap<Long, Error> errorTokens;
+	private HashMap<Token, List<Error>> errorTokens;
 	private List<Error> errors;
 	private List<Token> infix;
 	private double result;
@@ -47,18 +50,36 @@ public class Output {
 	}
 	
 	public String displayErrors() {
-		StringBuilder errorList = new StringBuilder();
-		errorList.append("\nERRORS:\n");
+		StringBuilder errorMsg = new StringBuilder();
+		errorMsg.append("\nERRORS:\n\n");
 		int index = 0;
 		
 		for(Token token : infix) {
-			if(token instanceof InvalidInput) {
-				errorList.append(++index);
-				errorList.append(".\t");
-				errorList.append()
+			if(errorTokens.containsKey(token)) {
+				errorMsg.append(++index);
+				errorMsg.append(". (");
+				errorMsg.append(token.toString().trim());
+				errorMsg.append(")\n");
 				
+				for(Error error : errorTokens.get(token)) {
+					errorMsg.append(error.toString());
+					errorMsg.append("\n");
+				}
 			}
 		}
+		
+		return errorMsg.toString();
+	}
+	
+	public void addError(Token token, Error error)  {
+		if(errorTokens.containsKey(token)) 
+			errorTokens.get(token).add(error);
+		else {
+			List<Error> newError = new LinkedList<>();
+			newError.add(error);
+			errorTokens.put(token, newError);
+		}
+			
 	}
 	
 	

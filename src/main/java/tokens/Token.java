@@ -18,6 +18,12 @@ public abstract class Token {
 		this.tokenId = tokenId;
 	}
 	
+	public static Token copyNewToken(Token token, long newId) {
+		return token.copyToken(newId);
+	}
+	
+	protected abstract Token copyToken(long tokenId);
+	
 	/**
 	 * provides unique identifier for Token object
 	 * 
@@ -51,6 +57,7 @@ public abstract class Token {
 	 * @return true if following operator must be unary
 	 */
 	public abstract boolean preceedsUnary();
+	
 	
 	/**
 	 * handles evaluation of this token

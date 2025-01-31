@@ -3,6 +3,9 @@ package parser;
 import java.util.ArrayDeque;
 import java.util.LinkedList;
 import java.util.List;
+
+import errors.ErrorTracker;
+
 import java.util.Deque;
 
 import tokens.*;
@@ -10,9 +13,11 @@ import tokens.*;
 public class Evaluator {
 	private TokenBuilder builder;
 	private List<Token> displayExpression;
+	private ErrorTracker errors;
 	
 	public Evaluator() {
 		builder = new TokenBuilder();
+		errors = new ErrorTracker();
 		System.out.println("ParserCreated");
 	}
 	
@@ -60,6 +65,10 @@ public class Evaluator {
 			if(thisToken.toString().trim().equals("-") && (prevToken == null || prevToken.preceedsUnary()))
 				thisToken = builder.getToken("u-");
 			
+			//add multiplication if parentheses
+			if(multiplyParentheses(prevToken, thisToken))
+				tokenList.add(builder.getToken("*"));
+			
 			tokenList.addLast(thisToken);
 			current.setLength(0);
 			
@@ -74,6 +83,43 @@ public class Evaluator {
 		return tokenList;
 	}
 	
+	/**
+	 * determines if implicit multiplication present in expression
+	 * ex.: 2(2 + 2) = 2 * (2 + 2)
+	 * 
+	 * @param prevToken previously parsed Token
+	 * @param thisToken current Token
+	 * @return true if multiplication required
+	 */
+	private boolean multiplyParentheses(Token prevToken, Token thisToken) {
+		if(thisToken instanceof Parentheses && thisToken.preceedsUnary()) {
+			if(prevToken != null) {
+				if(prevToken instanceof Operand)
+					return true;
+			
+				if(prevToken instanceof Parentheses && !prevToken.preceedsUnary())
+					return true;
+			}
+		}
+		
+		if(prevToken instanceof Parentheses && !prevToken.preceedsUnary()) {
+			if(thisToken instanceof Operand)
+				return true;
+			
+			if(thisToken instanceof UnaryOperator)
+				return true;
+		}
+		
+		if(prevToken instanceof Operand && thisToken instanceof UnaryOperator)
+			return true;
+		
+		return false;
+		
+	}
+			
+		
+	
+	
 	public List<Token> convertPostfix(List<Token> infixExpression) {
 		Deque<Token> operatorStack = new ArrayDeque<>();
 		List<Token> postfixExpression = new LinkedList<>();
@@ -84,9 +130,8 @@ public class Evaluator {
 		for(Token token: infixExpression) {
 			//System.out.println("Token: {" + token + "}");
 			
-			if(!(token instanceof InvalidInput)) {
+			if(!(token instanceof InvalidInput))
 				token.toRPN(operatorStack, postfixExpression);
-			}
 			
 			//System.out.println("op stack:\n" + operatorStack.toString());
 			//System.out.println("postfix list:\n" + postfixExpression.toString() + "\n");

@@ -24,15 +24,20 @@ public class Parentheses extends Token {
 	}
 
 	@Override
-	public void toRPN(Deque<Token> operatorStack, List<Token> infixExpression) {
+	public void toRPN(Deque<Token> operatorStack, List<Token> postfixExpression) {
         if(isOpen) {
             operatorStack.push(this);
         } else {
             while (!operatorStack.isEmpty() && !(operatorStack.peek() instanceof Parentheses)) {
-                infixExpression.add(operatorStack.pop());
+                postfixExpression.add(operatorStack.pop());
             }
             operatorStack.pop(); // Discard the open parenthesis
         }
+	}
+	
+	@Override
+	protected Token copyToken(long newId) {
+		return new Parentheses(symbol, newId, isOpen);
 	}
 
 }

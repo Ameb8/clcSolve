@@ -33,9 +33,9 @@ public class TokenBuilder {
 		} catch(NumberFormatException e) {}
 		
 		if(tokenRegistry.containsKey(tokenVal)) {
-			Token token = tokenRegistry.get(tokenVal);
-			token.setTokenId(tokenNum++);
-			return token;
+			return Token.copyNewToken(tokenRegistry.get(tokenVal), tokenNum++);
+		
+		
 		}
 		
 		if(!tokenValidator.contains(tokenVal))

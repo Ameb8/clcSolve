@@ -55,5 +55,10 @@ public class BinaryOperator extends Token implements Operator {
         double a = result.pop();
         result.push(operation.apply(a, b));
     }
+    
+    @Override
+    protected Token copyToken(long newId) {
+    	return new BinaryOperator(symbol, newId, precedence, isLeftAssociative, operation);
+    }
 }
 

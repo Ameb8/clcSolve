@@ -24,5 +24,10 @@ public class Operand extends Token {
 	public void toRPN(Deque<Token> operatorStack, List<Token> infixExpression) {
 		infixExpression.add(this);
 	}
+	
+	@Override
+	protected Token copyToken(long newId) {
+		return new Operand(newId, value);
+	}
 
 }

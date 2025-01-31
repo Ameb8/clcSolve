@@ -18,5 +18,10 @@ public class InvalidInput extends Token {
 	@Override
 	public void toRPN(Deque<Token> operatorStack, List<Token> postfixExpression) { }
 	
+	@Override
+	protected Token copyToken(long newId) {
+		return new InvalidInput(symbol, newId);
+	}
+	
 	
 }

@@ -31,7 +31,7 @@ public class UnaryOperator extends Token implements Operator {
 
     @Override
     public void toRPN(Deque<Token> operatorStack, List<Token> infixExpression) {
-        while(!operatorStack.isEmpty() && operatorStack.peek() instanceof Operator) {
+    	while(!operatorStack.isEmpty() && operatorStack.peek() instanceof Operator) {
             Operator top = (Operator) operatorStack.peek();
             
             if((isLeftAssociative && precedence <= top.getPrecedence()) || (!isLeftAssociative && precedence < top.getPrecedence())) {
@@ -53,5 +53,10 @@ public class UnaryOperator extends Token implements Operator {
     @Override
     public String toString() {
     	return symbol;
+    }
+    
+    @Override
+    protected Token copyToken(long newId) {
+    	return new UnaryOperator(symbol, newId, precedence, isLeftAssociative, operation);
     }
 }

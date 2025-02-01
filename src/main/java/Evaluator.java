@@ -1,4 +1,4 @@
-package parser;
+
 
 import java.util.ArrayDeque;
 import java.util.LinkedList;
@@ -12,25 +12,37 @@ import tokens.*;
 
 public class Evaluator {
 	private TokenBuilder builder;
-	private List<Token> displayExpression;
-	private ErrorTracker errors;
+	private Double result;
+	
+	private List<Token> infix;
+	
 	
 	public Evaluator() {
 		builder = new TokenBuilder();
-		errors = new ErrorTracker();
-		System.out.println("ParserCreated");
+		this.result = null;
 	}
 	
-	public void evaluateExpression(String expression) {
-		List<Token> infixExpression = parseExpression(expression);
-		System.out.println("Tokenized Infix\t" + infixExpression.toString());
-		List<Token> postfixExpression = convertPostfix(infixExpression);
-		System.out.println("Tokenized Postfix:\t" +  postfixExpression.toString());
-		double result = evaluate(postfixExpression);
-		System.out.println("Result:\t" + result);
+	public List<Token> getInfix() {
+		return this.infix;
 	}
 	
-	public List<Token> parseExpression(String expression) {
+	public Double getResult() {
+		return result;
+	}
+	
+	public void evaluateExpression(String expression) { 
+		parseExpression(expression);
+		List<Token> postfixExpression = convertPostfix(infix);
+
+		result = null;
+		
+		
+		try {
+			result = evaluate(postfixExpression);
+		} catch(IllegalArgumentException e) { }
+	}
+	
+	private void parseExpression(String expression) {
 		List<Token> tokenList = new LinkedList<>();
 		Token prevToken = null;
 		Token thisToken = null;
@@ -57,9 +69,6 @@ public class Evaluator {
 			
 			if(thisToken == null)
 				continue;
-			//DEBUG
-			//else
-				//System.out.println(thisToken.toString());
 			
 			//handle binary vs. unary '-'
 			if(thisToken.toString().trim().equals("-") && (prevToken == null || prevToken.preceedsUnary()))
@@ -74,13 +83,14 @@ public class Evaluator {
 			
 			if(!(thisToken instanceof InvalidInput))
 				prevToken = thisToken;
-			
+			else
+				ErrorTracker.addError(thisToken, "Character not recognized");
 			thisToken = null;
 				
 			
 		}
 		
-		return tokenList;
+		this.infix = tokenList;
 	}
 	
 	/**
@@ -120,37 +130,30 @@ public class Evaluator {
 		
 	
 	
-	public List<Token> convertPostfix(List<Token> infixExpression) {
+	private List<Token> convertPostfix(List<Token> infixExpression) {
 		Deque<Token> operatorStack = new ArrayDeque<>();
 		List<Token> postfixExpression = new LinkedList<>();
 		
-		//DEBUG
-		//System.out.println("\n\n\nCONVERT TO POSTFIX: [" + infixExpression.toString() + "]");
-		
 		for(Token token: infixExpression) {
-			//System.out.println("Token: {" + token + "}");
-			
 			if(!(token instanceof InvalidInput))
 				token.toRPN(operatorStack, postfixExpression);
-			
-			//System.out.println("op stack:\n" + operatorStack.toString());
-			//System.out.println("postfix list:\n" + postfixExpression.toString() + "\n");
 		}
 		
 		while(!operatorStack.isEmpty())
 			postfixExpression.addLast(operatorStack.pop());
 		
 		return postfixExpression;
-		
 	}
 	
-	public Double evaluate(List<Token> postfixExpression) {
+	private Double evaluate(List<Token> postfixExpression) throws IllegalArgumentException {
 		Deque<Double> evaluator = new ArrayDeque<>();
 		
 		for(Token token : postfixExpression) {
-			System.out.println(evaluator.toString());
+			boolean valid = token.evaluate(evaluator);
 			
-			token.evaluate(evaluator);
+			if(!valid) {
+				throw new IllegalArgumentException();
+			}
 		}	
 		return evaluator.pop();
 	}

@@ -64,7 +64,7 @@ public abstract class Token {
 	 * 
 	 * @param stack current result of expression
 	 */
-	public abstract void evaluate(Deque<Double> result); 
+	public abstract boolean evaluate(Deque<Double> result); 
 	
 	/**
 	 * handles conversion to post fix expression
@@ -73,5 +73,18 @@ public abstract class Token {
 	 * @param postfixExpression Resulting expression in post fix order
 	 */
 	public abstract void toRPN(Deque<Token> operatorStack, List<Token> postfixExpression);
+	
+	@Override
+	public boolean equals(Object other) {
+		if(other == null || getClass() != other.getClass())
+			return false;
+		
+		return tokenId == ((Token) other).getTokenId();
+	}
+	
+	@Override
+	public int hashCode() {
+		return Long.hashCode(tokenId);
+	}
 	
 }

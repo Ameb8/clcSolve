@@ -16,8 +16,9 @@ public class Operand extends Token {
 	}
 	
 	@Override
-	public void evaluate(Deque<Double> result) {
+	public boolean evaluate(Deque<Double> result) {
 		result.push(value);
+		return true;
 	}
 
 	@Override

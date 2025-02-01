@@ -13,7 +13,7 @@ public class InvalidInput extends Token {
 	}
 
 	@Override
-	public void evaluate(Deque<Double> result) { }
+	public boolean evaluate(Deque<Double> result) { return false;}
 
 	@Override
 	public void toRPN(Deque<Token> operatorStack, List<Token> postfixExpression) { }

@@ -3,6 +3,8 @@ package tokens;
 import java.util.Deque;
 import java.util.List;
 
+import errors.ErrorTracker;
+
 public class Parentheses extends Token {
 	boolean isOpen;
 	
@@ -19,8 +21,9 @@ public class Parentheses extends Token {
     }
 	
 	@Override
-	public void evaluate(Deque<Double> result) {
-		System.out.println("Parentheses should not be present during evaluation.");
+	public boolean evaluate(Deque<Double> result) {
+		ErrorTracker.addError(this, "Unclosed Parentheses");
+		return false;
 	}
 
 	@Override

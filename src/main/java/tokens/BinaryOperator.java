@@ -4,6 +4,8 @@ import java.util.Deque;
 import java.util.List;
 import java.util.function.BiFunction;
 
+import errors.ErrorTracker;
+
 public class BinaryOperator extends Token implements Operator {
     private byte precedence;
     private boolean isLeftAssociative;
@@ -50,10 +52,17 @@ public class BinaryOperator extends Token implements Operator {
     }
 
     @Override
-    public void evaluate(Deque<Double> result) {
+    public boolean evaluate(Deque<Double> result) {
         double b = result.pop();
         double a = result.pop();
+        
+        if(symbol.equals("÷") && b == 0) {
+        	ErrorTracker.addError(this, "Cannot divide by zero");
+        	return false;
+        }
+        
         result.push(operation.apply(a, b));
+        return true;
     }
     
     @Override

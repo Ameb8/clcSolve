@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import errors.ErrorTracker;
+
 public class UnaryOperator extends Token implements Operator {
     private byte precedence;
     private boolean isLeftAssociative;
@@ -45,9 +47,23 @@ public class UnaryOperator extends Token implements Operator {
     }
 
     @Override
-    public void evaluate(Deque<Double> result) {
+    public boolean evaluate(Deque<Double> result) {
+    	if(symbol.equals("sqrt") && result.peek() < 0) {
+    		ErrorTracker.addError(this, "Square root of negative numbers not supported");
+    		return false;
+    	}
+    	
+    	if((symbol.equals("ln") || symbol.equals("log10")) && result.peek() <= 0) {
+    		ErrorTracker.addError(this, "Operand for logarthmic expressions must be positive");
+    		return false;
+    	}
+
+    	if(symbol.equals("cot") && Math.sin(result.peek()) == 0) {
+    		ErrorTracker.addError(this, "cotangent of "  + result.peek() + " is undefined, as sin of " + result.peek() + " is zero");
+    	}
 
         result.push(operation.apply(result.pop()));
+        return true;
     }
 
     @Override

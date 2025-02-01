@@ -63,6 +63,15 @@ public class SupportedTokens {
 		Token tan = new UnaryOperator("tan", 0, (byte) 2, false, (a) -> Math.tan(a));
 		tokens.put("tan", tan);
 		
+		Token cot = new UnaryOperator("cot", 0, (byte) 2, false, (a) -> Math.cos(a) / Math.sin(a));
+		tokens.put("cot", cot);
+		
+		Token ln = new UnaryOperator("ln", 0, (byte) 2, false, (a) -> Math.log(a));
+		tokens.put("ln", ln);
+		
+		Token log10 = new UnaryOperator("log10", 0, (byte) 2, false, (a) -> Math.log10(a));
+		tokens.put("log", log10);
+		
 		//Token factorial = new UnaryOperator("!", 0, (byte) 2, false, (a) -> Math.factorial(a));
 		
 		

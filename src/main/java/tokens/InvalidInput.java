@@ -8,15 +8,16 @@ public class InvalidInput extends Token {
 		super(symbol, tokenId);
 	}
 	
+	@Override
 	public boolean preceedsUnary() {
 		return false;
 	}
 
 	@Override
-	public boolean evaluate(Deque<Double> result) { return false;}
+	public boolean evaluate(Deque<Double> result) { return true;}
 
 	@Override
-	public void toRPN(Deque<Token> operatorStack, List<Token> postfixExpression) { }
+	public boolean toRPN(Deque<Token> operatorStack, List<Token> postfixExpression) { return true;}
 	
 	@Override
 	protected Token copyToken(long newId) {

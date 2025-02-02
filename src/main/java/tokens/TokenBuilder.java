@@ -24,9 +24,6 @@ public class TokenBuilder {
 	 * @return Token based on String input
 	 */
 	public Token getToken(String tokenVal) throws IllegalArgumentException {
-		//DEBUG
-		//System.out.println("TokenVal: " + tokenVal);
-		
 		try {
 			double operandValue = Double.parseDouble(tokenVal);
 			return new Operand(tokenNum++, operandValue);

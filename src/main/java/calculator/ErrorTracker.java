@@ -1,4 +1,5 @@
-package errors;
+package calculator;
+
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -18,5 +19,9 @@ public class ErrorTracker {
 			errorMap.put(token, new LinkedList<String>());
 	
 		errorMap.get(token).add(errMsg);
+	}
+	
+	public static void reset() {
+		errorMap.clear();
 	}
 }

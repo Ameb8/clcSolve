@@ -22,6 +22,12 @@ public abstract class Token {
 		return token.copyToken(newId);
 	}
 	
+	/**
+	 * creates copy of token object, with new unique tokenId
+	 * 
+	 * @param tokenId new unique identifier for token
+	 * @return deep copy of passed Token
+	 */
 	protected abstract Token copyToken(long tokenId);
 	
 	/**
@@ -41,16 +47,6 @@ public abstract class Token {
 		return symbol  + " ";
 	}
 	
-	
-	/**
-	 * creates copy of token object, with new unique tokenId
-	 * 
-	 * @param other token to be copied
-	 * @param tokenId new unique identifier for token
-	 * @return deep copy of passed Token
-	 */
-//	public abstract Token copyToken(Token other, long tokenId);
-
 	/**
 	 * determines if operator following this token must be unary
 	 * 
@@ -72,7 +68,7 @@ public abstract class Token {
 	 * @param operatorStack Dequeue of operators
 	 * @param postfixExpression Resulting expression in post fix order
 	 */
-	public abstract void toRPN(Deque<Token> operatorStack, List<Token> postfixExpression);
+	public abstract boolean toRPN(Deque<Token> operatorStack, List<Token> postfixExpression);
 	
 	@Override
 	public boolean equals(Object other) {

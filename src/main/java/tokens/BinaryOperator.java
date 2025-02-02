@@ -1,10 +1,12 @@
 package tokens;
 
+
 import java.util.Deque;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.function.BiFunction;
 
-import errors.ErrorTracker;
+import calculator.ErrorTracker;
 
 public class BinaryOperator extends Token implements Operator {
     private byte precedence;
@@ -23,10 +25,6 @@ public class BinaryOperator extends Token implements Operator {
     	return true;
     }
 
-    /*public Token copyToken(Token other, long tokenId) {
-    	return new Operator(other.getSymbol(), other.getTokenId(), other.getPrecedence, other.isLeftAssoicait)
-    }*/
-    
     @Override
     public byte getPrecedence() {
     	return precedence;
@@ -38,7 +36,7 @@ public class BinaryOperator extends Token implements Operator {
     }
 
     @Override
-    public void toRPN(Deque<Token> operatorStack, List<Token> infixExpression) {
+    public boolean toRPN(Deque<Token> operatorStack, List<Token> infixExpression) {
         while(!operatorStack.isEmpty() && operatorStack.peek() instanceof Operator) {
             Operator top = (Operator) operatorStack.peek();
             if((isLeftAssociative && precedence <= top.getPrecedence()) || (!isLeftAssociative && precedence < top.getPrecedence())) {
@@ -49,13 +47,23 @@ public class BinaryOperator extends Token implements Operator {
         }
         
         operatorStack.push(this);
+        
+        return true;
     }
 
     @Override
     public boolean evaluate(Deque<Double> result) {
-        double b = result.pop();
-        double a = result.pop();
-        
+    	double a = 0;
+    	double b = 0;
+    	
+    	try {
+    		b = result.pop();
+    		a = result.pop();
+    	} catch(NoSuchElementException e) {
+    		ErrorTracker.addError(this, "This operator requires two adjacent operands");
+    		return false;
+    	}
+    		
         if(symbol.equals("÷") && b == 0) {
         	ErrorTracker.addError(this, "Cannot divide by zero");
         	return false;

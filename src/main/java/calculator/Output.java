@@ -1,16 +1,10 @@
-import java.util.LinkedList;
+package calculator;
 import java.util.List;
-
-import errors.Error;
-import errors.ErrorTracker;
-
-import java.util.HashMap;
 
 import tokens.InvalidInput;
 import tokens.Token;
 
 public class Output {
-	private HashMap<Token, List<String>> errorTokens;
 	private Evaluator e;
 	
 	public Output() { }
@@ -20,8 +14,8 @@ public class Output {
 		e.evaluateExpression(expression);
 		
 		return getOutput();
+		
 	}
-	
 	
 	private String getOutput() {
 		StringBuilder output = new StringBuilder();
@@ -41,14 +35,16 @@ public class Output {
 		if(tokenIndex > 0)
 			output.append(getErrorMsg());
 
-		if(e.getResult() != null) {
-			output.append(getSolvedExpression());
+		output.append(getSolvedExpression());
+		
+		if(e.getResult() == null) {
+			output.append("could not be calculated");
+		} else if(!Double.isFinite(e.getResult())) {
+			output.append("Exceeded maximum range of calculator");
+		} else {
 			output.append("= ");
 			output.append(e.getResult());
-		} else {
-			output.append(getSolvedExpression());
-			output.append(" could not be evaluated");
-		}
+		} 
 		
 		return output.toString();
 	}

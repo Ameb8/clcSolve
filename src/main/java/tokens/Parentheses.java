@@ -1,9 +1,10 @@
 package tokens;
 
 import java.util.Deque;
+import java.math.BigDecimal;
 import java.util.List;
 
-import errors.ErrorTracker;
+import calculator.ErrorTracker;
 
 public class Parentheses extends Token {
 	boolean isOpen;
@@ -13,6 +14,7 @@ public class Parentheses extends Token {
     	this.isOpen = isOpen;
     }
     
+    @Override
     public boolean preceedsUnary() {
     	if(isOpen)
     		return true;
@@ -23,19 +25,28 @@ public class Parentheses extends Token {
 	@Override
 	public boolean evaluate(Deque<Double> result) {
 		ErrorTracker.addError(this, "Unclosed Parentheses");
+		
 		return false;
 	}
 
 	@Override
-	public void toRPN(Deque<Token> operatorStack, List<Token> postfixExpression) {
+	public boolean toRPN(Deque<Token> operatorStack, List<Token> postfixExpression) {
         if(isOpen) {
             operatorStack.push(this);
         } else {
-            while (!operatorStack.isEmpty() && !(operatorStack.peek() instanceof Parentheses)) {
+            while (!operatorStack.isEmpty() && !(operatorStack.peek() instanceof Parentheses))
                 postfixExpression.add(operatorStack.pop());
+            
+            
+            if(operatorStack.isEmpty()) {
+            	ErrorTracker.addError(this, "Unopened Parentheses");	
+            	return false;
             }
+            
             operatorStack.pop(); // Discard the open parenthesis
         }
+        
+        return true;
 	}
 	
 	@Override

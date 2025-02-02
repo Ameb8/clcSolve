@@ -1,11 +1,9 @@
+package calculator;
 
 
 import java.util.ArrayDeque;
 import java.util.LinkedList;
 import java.util.List;
-
-import errors.ErrorTracker;
-
 import java.util.Deque;
 
 import tokens.*;
@@ -20,6 +18,7 @@ public class Evaluator {
 	public Evaluator() {
 		builder = new TokenBuilder();
 		this.result = null;
+		ErrorTracker.reset();
 	}
 	
 	public List<Token> getInfix() {
@@ -32,10 +31,15 @@ public class Evaluator {
 	
 	public void evaluateExpression(String expression) { 
 		parseExpression(expression);
-		List<Token> postfixExpression = convertPostfix(infix);
-
+		List<Token> postfixExpression = null;
 		result = null;
 		
+		try {
+			postfixExpression = convertPostfix(infix);
+		} catch(IllegalArgumentException e) { }
+		
+		if(postfixExpression == null)
+			return;
 		
 		try {
 			result = evaluate(postfixExpression);
@@ -130,13 +134,18 @@ public class Evaluator {
 		
 	
 	
-	private List<Token> convertPostfix(List<Token> infixExpression) {
+	private List<Token> convertPostfix(List<Token> infixExpression) throws IllegalArgumentException {
 		Deque<Token> operatorStack = new ArrayDeque<>();
 		List<Token> postfixExpression = new LinkedList<>();
 		
 		for(Token token: infixExpression) {
+			boolean valid = true;
+			
 			if(!(token instanceof InvalidInput))
-				token.toRPN(operatorStack, postfixExpression);
+				valid = token.toRPN(operatorStack, postfixExpression);
+			
+			if(!valid)
+				throw new IllegalArgumentException();
 		}
 		
 		while(!operatorStack.isEmpty())
@@ -155,6 +164,12 @@ public class Evaluator {
 				throw new IllegalArgumentException();
 			}
 		}	
+		
+		if(evaluator.isEmpty()) {
+			ErrorTracker.addError(new InvalidInput(" ", 0), "Missing operands");
+			throw new IllegalArgumentException();
+		}
+		
 		return evaluator.pop();
 	}
 	

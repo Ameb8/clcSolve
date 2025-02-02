@@ -11,6 +11,7 @@ public class Operand extends Token {
 		this.value = value;
 	}
 	
+	@Override
 	public boolean preceedsUnary() {
 		return false;
 	}
@@ -22,8 +23,9 @@ public class Operand extends Token {
 	}
 
 	@Override
-	public void toRPN(Deque<Token> operatorStack, List<Token> infixExpression) {
+	public boolean toRPN(Deque<Token> operatorStack, List<Token> infixExpression) {
 		infixExpression.add(this);
+		return true;
 	}
 	
 	@Override

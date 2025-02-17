@@ -12,11 +12,20 @@ public class SupportedTokens {
 		//supportedTokens = getSupportedTokens();
 	}
 
+	/**
+	 * Creates HashMap storing Tokens of all supported operators.
+	 * Operator Tokens are stored as value
+	 * valid input parsed to operator is stored as keys
+	 * To add additional supported operators, simply create a new Operator implementation
+	 * the lambda function determines the functionality of the operator
+	 * if range of input is finite, this can be handled in the class being instantiated
+	 * 
+	 * @return HashMap containing all supported tokens
+	 */
 	public static HashMap<String, Token> getSupportedTokens() {
 		HashMap<String, Token> tokens = new HashMap<>();
 		
 		//add binary operators
-		//String symbol, long tokenId, byte precedence, boolean isLeftAssociative, BiFunction<Double, Double, Double> operation
 		Token addition = new BinaryOperator("+", 0, (byte) 0, true, (a, b) -> a + b);
 		tokens.put("+", addition);
 		
@@ -30,7 +39,12 @@ public class SupportedTokens {
 		tokens.put("X", multiplication);
 		tokens.put("x", multiplication);
 		
-		Token division = new BinaryOperator("÷", 0, (byte) 1, true, (a, b) -> a / b);
+		Token division = new BinaryOperator("÷", 0, (byte) 1, true, (a, b) -> {
+			if(b == 0)
+				throw new IllegalArgumentException("Cannot divide by zero");
+			
+			return a / b;
+		});
 		tokens.put("÷", division);
 		tokens.put("/", division);
 		
@@ -47,9 +61,13 @@ public class SupportedTokens {
 		tokens.put("}", rightGrouping);
 		tokens.put("]", rightGrouping);
 		
-		Token sqrRoot = new UnaryOperator("sqrt", 0, (byte) 2, false, (a) -> Math.sqrt(a));
+		Token sqrRoot = new UnaryOperator("sqrt", 0, (byte) 2, false, (a) -> {
+			if(a < 0)
+				throw new IllegalArgumentException("Square root of negative numbers is not supported");			
+			return Math.sqrt(a);	
+		});
 		tokens.put("sqrt", sqrRoot);
-		tokens.put("√ ", sqrRoot);
+		tokens.put("√", sqrRoot);
 		
 		Token unaryMinus = new UnaryOperator("-", 0, (byte) 2, false, (a) -> a * -1);
 		tokens.put("u-", unaryMinus);
@@ -63,25 +81,40 @@ public class SupportedTokens {
 		Token tan = new UnaryOperator("tan", 0, (byte) 2, false, (a) -> Math.tan(a));
 		tokens.put("tan", tan);
 		
-		Token cot = new UnaryOperator("cot", 0, (byte) 2, false, (a) -> Math.cos(a) / Math.sin(a));
+		Token cot = new UnaryOperator("cot", 0, (byte) 2, false, (a) -> {
+			if(Math.sin(a) == 0)
+				throw new IllegalArgumentException("Cotangent cannot be calculated, as the sine of "  + a + " is zero, and cotangent requires dividing by the sine of the operand");
+			return Math.cos(a) / Math.sin(a);
+		});
 		tokens.put("cot", cot);
 		
-		Token ln = new UnaryOperator("ln", 0, (byte) 2, false, (a) -> Math.log(a));
+		Token ln = new UnaryOperator("ln", 0, (byte) 2, false, (a) -> {
+			if(a <= 0)
+				throw new IllegalArgumentException("Logarithmic operations can only be applied to positive numbers");
+			return Math.log(a);
+		});
 		tokens.put("ln", ln);
 		
-		Token log10 = new UnaryOperator("log10", 0, (byte) 2, false, (a) -> Math.log10(a));
+		Token log10 = new UnaryOperator("log10", 0, (byte) 2, false, (a) -> {
+			if(a <= 0)
+				throw new IllegalArgumentException("Logarithmic operations can only be paplied to postive numbers");
+			return Math.log10(a);
+		});
 		tokens.put("log", log10);
 		
-		//Token factorial = new UnaryOperator("!", 0, (byte) 2, false, (a) -> Math.factorial(a));
-		
-		
-		
-		
-		
-		//System.out.println("TEST______:\n" + multiplication.toString());
-		
-		
-		
+		Token factorial = new UnaryOperator("!", 0, (byte) 2, false, (a) -> {
+			if(a < 1 || Math.floor(a) != a)
+				throw new IllegalArgumentException("Factorial can only be applied to positive integer values");
+			
+			double result = 1;
+			
+			for(int i = 1; i <= a; i++)
+				result *= i;
+			
+			return result;
+		});
+		tokens.put("!", factorial);
+
 		return tokens;
 	}
 }

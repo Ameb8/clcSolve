@@ -51,6 +51,7 @@ public class UnaryOperator extends Token implements Operator {
     @Override
     public boolean evaluate(Deque<Double> result) {
     	Double a = null;
+    	double operationResult;
     	
     	try {
     		a = result.pop();
@@ -59,21 +60,14 @@ public class UnaryOperator extends Token implements Operator {
     		return false;
     	}
     	
-    	if(symbol.equals("sqrt") && a  <  0) {
-    		ErrorTracker.addError(this, "Square root of negative numbers not supported");
+    	try {
+    		operationResult = operation.apply(a);
+    	} catch(IllegalArgumentException e) { //operand invalid for given UnaryOperator
+    		ErrorTracker.addError(this, e.getMessage());
     		return false;
     	}
     	
-    	if((symbol.equals("ln") || symbol.equals("log10")) && a <= 0) {
-    		ErrorTracker.addError(this, "Operand for logarthmic expressions must be positive");
-    		return false;
-    	}
-
-    	if(symbol.equals("cot") && Math.sin(a) == 0) {
-    		ErrorTracker.addError(this, "cotangent of "  + result.peek() + " is undefined, as sin of " + result.peek() + " is zero");
-    	}
-    	
-        result.push(operation.apply(a));
+        result.push(operationResult);
         return true;
     }
 

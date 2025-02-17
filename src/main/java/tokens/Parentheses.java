@@ -37,13 +37,12 @@ public class Parentheses extends Token {
             while (!operatorStack.isEmpty() && !(operatorStack.peek() instanceof Parentheses))
                 postfixExpression.add(operatorStack.pop());
             
-            
             if(operatorStack.isEmpty()) {
             	ErrorTracker.addError(this, "Unopened Parentheses");	
             	return false;
             }
             
-            operatorStack.pop(); // Discard the open parenthesis
+            operatorStack.pop();
         }
         
         return true;

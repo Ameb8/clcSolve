@@ -12,7 +12,6 @@ public class TokenBuilder {
 		tokenRegistry = SupportedTokens.getSupportedTokens();
 		tokenValidator = getTokenValidator();
 		tokenNum = 0;
-		//System.out.println("TokenBuilder Created");
 	}
 	
 	/**
@@ -23,20 +22,17 @@ public class TokenBuilder {
 	 * @param tokenVal input to be converted to Token
 	 * @return Token based on String input
 	 */
-	public Token getToken(String tokenVal) throws IllegalArgumentException {
+	public Token getToken(String tokenVal) {
 		try {
 			double operandValue = Double.parseDouble(tokenVal);
 			return new Operand(tokenNum++, operandValue);
 		} catch(NumberFormatException e) {}
 		
-		if(tokenRegistry.containsKey(tokenVal)) {
-			return Token.copyNewToken(tokenRegistry.get(tokenVal), tokenNum++);
-		
-		
-		}
+		if(tokenRegistry.containsKey(tokenVal))
+			return Token.copyNewToken(tokenRegistry.get(tokenVal), tokenNum++);	
 		
 		if(!tokenValidator.contains(tokenVal))
-			return new InvalidInput(tokenVal, tokenNum);
+			return new InvalidInput(tokenVal, tokenNum++);
 		
 		return null;	
 	}

@@ -11,7 +11,6 @@ import tokens.*;
 public class Evaluator {
 	private TokenBuilder builder;
 	private Double result;
-	
 	private List<Token> infix;
 	
 	
@@ -62,8 +61,8 @@ public class Evaluator {
 			
 			current.append(expression.charAt(nextChar));
 			
-			if(Character.isDigit(expression.charAt(nextChar))) {
-				while(nextChar + 1 < expression.length() && Character.isDigit(expression.charAt(nextChar + 1)) || expression.charAt(nextChar) == '.') {
+			if(Character.isDigit(expression.charAt(nextChar)) || expression.charAt(nextChar) == '.') {
+				while(nextChar + 1 < expression.length() && (Character.isDigit(expression.charAt(nextChar + 1)) || expression.charAt(nextChar + 1) == '.')) {
 					current.append(expression.charAt(++nextChar));
 					
 				}
@@ -131,9 +130,6 @@ public class Evaluator {
 		
 	}
 			
-		
-	
-	
 	private List<Token> convertPostfix(List<Token> infixExpression) throws IllegalArgumentException {
 		Deque<Token> operatorStack = new ArrayDeque<>();
 		List<Token> postfixExpression = new LinkedList<>();

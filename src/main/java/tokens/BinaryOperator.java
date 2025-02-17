@@ -55,6 +55,7 @@ public class BinaryOperator extends Token implements Operator {
     public boolean evaluate(Deque<Double> result) {
     	double a = 0;
     	double b = 0;
+    	double operationResult;
     	
     	try {
     		b = result.pop();
@@ -64,12 +65,14 @@ public class BinaryOperator extends Token implements Operator {
     		return false;
     	}
     		
-        if(symbol.equals("÷") && b == 0) {
-        	ErrorTracker.addError(this, "Cannot divide by zero");
-        	return false;
-        }
-        
-        result.push(operation.apply(a, b));
+    	try {
+    		operationResult = operation.apply(a, b);
+    	} catch(IllegalArgumentException e) { //operand invalid for given BinaryOperator
+    		ErrorTracker.addError(this, e.getMessage());
+    		return false;
+    	}
+    	
+        result.push(operationResult);
         return true;
     }
     

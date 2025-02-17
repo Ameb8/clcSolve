@@ -22,7 +22,7 @@ public class Driver {
 			return false;
 		if(input.equalsIgnoreCase("help"))
 			help();
-		if(!input.isBlank())
+		else if(!input.isBlank())
 			evaluate(input);
 		
 		return true;
@@ -40,7 +40,7 @@ public class Driver {
 		help.append("Enter a mathematical expression to be evaluated\n");
 		help.append("All basic mathematical operations are supported\n");
 		help.append("In addition:\n\t'sqrt' or '√' for square root\n\t'sin', 'cos', 'tan', 'cot' for trig operations");
-		help.append("\n\t'log' for base-10 log\n\t'ln' for natural log");
+		help.append("\n\t'log' for base-10 log\n\t'ln' for natural log\n\t'!' for factorial");
 		
 		System.out.println(help.toString());
 	}

@@ -14,7 +14,7 @@ public class ErrorTracker {
 		return errorMap.get(token);
 	}
 	
-	public static  void addError(Token token, String errMsg) {
+	public static void addError(Token token, String errMsg) {
 		if(!errorMap.containsKey(token))
 			errorMap.put(token, new LinkedList<String>());
 	

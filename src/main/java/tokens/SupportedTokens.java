@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 public class SupportedTokens {
-	//private List<Token> supportedTokens;
+	private static final double EPSILON = 0.000000001;
 	
 	public SupportedTokens() {
 		//supportedTokens = getSupportedTokens();
@@ -32,7 +32,7 @@ public class SupportedTokens {
 		Token subtraction = new BinaryOperator("-", 0, (byte) 0, true, (a, b) -> a - b);
 		tokens.put("-", subtraction);
 		
-		Token multiplication = new BinaryOperator("*", 0, (byte) 1, true, (a, b) -> a * b);
+		Token multiplication = new BinaryOperator("*", 0, (byte) 1, true, (a, b) -> limitPrecision(a * b));
 		tokens.put("*", multiplication);
 		tokens.put("⋅", multiplication);
 		tokens.put("×", multiplication);
@@ -43,12 +43,12 @@ public class SupportedTokens {
 			if(b == 0)
 				throw new IllegalArgumentException("Cannot divide by zero");
 			
-			return a / b;
+			return limitPrecision(a / b);
 		});
 		tokens.put("÷", division);
 		tokens.put("/", division);
 		
-		Token exponent =  new BinaryOperator("^", 0, (byte) 2, true, (a, b) -> Math.pow(a, b));
+		Token exponent =  new BinaryOperator("^", 0, (byte) 2, true, (a, b) -> limitPrecision(Math.pow(a, b)));
 		tokens.put("^", exponent);
 		
 		Token leftGrouping = new Parentheses("(", 0, true);
@@ -72,33 +72,33 @@ public class SupportedTokens {
 		Token unaryMinus = new UnaryOperator("-", 0, (byte) 2, false, (a) -> a * -1);
 		tokens.put("u-", unaryMinus);
 		
-		Token sin = new UnaryOperator("sin", 0, (byte) 2, false, (a) -> Math.sin(a));
+		Token sin = new UnaryOperator("sin", 0, (byte) 2, false, (a) -> limitPrecision(Math.sin(a)));
 		tokens.put("sin", sin);
 		
-		Token cos = new UnaryOperator("cos", 0, (byte) 2, false, (a) -> Math.cos(a));
+		Token cos = new UnaryOperator("cos", 0, (byte) 2, false, (a) -> limitPrecision(Math.cos(a)));
 		tokens.put("cos", cos);
 		
-		Token tan = new UnaryOperator("tan", 0, (byte) 2, false, (a) -> Math.tan(a));
+		Token tan = new UnaryOperator("tan", 0, (byte) 2, false, (a) -> limitPrecision(Math.tan(a)));
 		tokens.put("tan", tan);
 		
 		Token cot = new UnaryOperator("cot", 0, (byte) 2, false, (a) -> {
 			if(Math.sin(a) == 0)
 				throw new IllegalArgumentException("Cotangent cannot be calculated, as the sine of "  + a + " is zero, and cotangent requires dividing by the sine of the operand");
-			return Math.cos(a) / Math.sin(a);
+			return limitPrecision(limitPrecision(Math.cos(a)) / limitPrecision(Math.sin(a)));
 		});
 		tokens.put("cot", cot);
 		
 		Token ln = new UnaryOperator("ln", 0, (byte) 2, false, (a) -> {
 			if(a <= 0)
 				throw new IllegalArgumentException("Logarithmic operations can only be applied to positive numbers");
-			return Math.log(a);
+			return limitPrecision(Math.log(a));
 		});
 		tokens.put("ln", ln);
 		
 		Token log10 = new UnaryOperator("log10", 0, (byte) 2, false, (a) -> {
 			if(a <= 0)
 				throw new IllegalArgumentException("Logarithmic operations can only be paplied to postive numbers");
-			return Math.log10(a);
+			return limitPrecision(Math.log10(a));
 		});
 		tokens.put("log", log10);
 		
@@ -116,5 +116,12 @@ public class SupportedTokens {
 		tokens.put("!", factorial);
 
 		return tokens;
+	}
+	
+	private static double limitPrecision(double value) {
+		if (Math.abs(value - Math.round(value)) < EPSILON)
+	        return Math.round(value);
+
+	    return value;
 	}
 }
